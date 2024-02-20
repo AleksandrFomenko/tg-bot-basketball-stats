@@ -58,7 +58,7 @@ func (n NbaProcessor) GetLastGameByTeam(teamName string) string {
 			return fmt.Sprintf("Ошибка при чтении ответа: %v", err)
 		}
 		defer resp.Body.Close()
-		if response.Data.ID == 0 {
+		if len(response.Data) == 0 {
 			currentTime = currentTime.Add(-24 * time.Hour)
 			param.Set("dates[]", currentTime.Format("2006-01-02"))
 			attempts++
@@ -73,8 +73,6 @@ func (n NbaProcessor) GetLastGameByTeam(teamName string) string {
 		}
 
 		break
-
 	}
-
 	return string(currentTime.Format("2006-01-02"))
 }
