@@ -3,7 +3,7 @@ package telegram
 import (
 	"log"
 	"strings"
-	nbaapi "tg-bot/nba-api"
+	"tg-bot/basketballstats/nba"
 )
 
 const (
@@ -34,11 +34,11 @@ func (p *Processor) sendHelp(chatId int) error {
 }
 
 func (p *Processor) sendHello(chatId int, username string) error {
-	return p.tg.SendMassage(chatId, "Привет "+username+"!"+msgHelp)
+	return p.tg.SendMassage(chatId, "Привет, "+username+"!"+msgHelp)
 }
 
 func (p *Processor) sendMess(chatId int) error {
-
-	text := nbaapi.GetTeam()
+	nbaprocessor := nba.New()
+	text := nbaprocessor.GetLastGameByTeam("boston")
 	return p.tg.SendMassage(chatId, text)
 }
