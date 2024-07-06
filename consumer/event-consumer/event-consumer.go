@@ -25,13 +25,11 @@ func (c Consumer) Start() error {
 		gotEvents, err := c.fetcher.Fetch(c.batchSize)
 		if err != nil {
 			log.Printf("Eror consumer: %s", err.Error())
-
 			continue
 		}
 
 		if len(gotEvents) == 0 {
 			time.Sleep(1 * time.Second)
-
 			continue
 		}
 

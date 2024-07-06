@@ -1,9 +1,9 @@
 package main
 
 import (
-	"flag"
 	"log"
 	tgclient "tg-bot/clients/telegram"
+	"tg-bot/config"
 	eventconsumer "tg-bot/consumer/event-consumer"
 	"tg-bot/events/telegram"
 )
@@ -19,19 +19,14 @@ const (
 )
 
 func main() {
-	eventsProcessor := telegram.New(tgclient.New(tgHost, mustToken()))
+	cfg := config.LoadConfig()
+	if cfg.Token == "" {
+		log.Fatal("некорректный токен")
+	}
+	eventsProcessor := telegram.New(tgclient.New(tgHost, cfg.Token))
 	log.Print("service started")
 	consumer := eventconsumer.New(eventsProcessor, eventsProcessor, batchSize)
 	if err := consumer.Start(); err != nil {
 		log.Fatal("service is stopped", err)
 	}
-}
-
-func mustToken() string {
-	token := flag.String("token-bt", "", "токен для запуска")
-	flag.Parse()
-	if *token == "" {
-		log.Fatal("некорректный токен")
-	}
-	return *token
 }
